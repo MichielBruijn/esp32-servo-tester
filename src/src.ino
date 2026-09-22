@@ -35,7 +35,7 @@
  GPIO 0: Onboard BOOT button, repurposed as a "next channel" shortcut
  */
 
-char codeVersion[] = "1.39"; // Software revision.
+char codeVersion[] = "1.40"; // Software revision.
 
 //
 // =======================================================================================================
@@ -714,7 +714,10 @@ void bleRespond(const String &line)
 {
   if (!bleDeviceConnected || bleTxCharacteristic == nullptr)
     return; // No phone connected right now - same as GETVERSION etc. over Serial with nothing listening, just drop it.
-  bleTxCharacteristic->setValue(line.c_str());
+  // Serial.println() adds "\n" for free, this path didn't - and "\n" is the only end-of-line
+  // signal the app's line protocol knows, so every BLE reply timed out. Same fix as the C3 board.
+  String withNewline = line + "\n";
+  bleTxCharacteristic->setValue(withNewline.c_str());
   bleTxCharacteristic->notify();
 }
 
