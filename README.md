@@ -49,7 +49,7 @@ Any ESP32 DevKit board works — connect an I2C OLED, a 5-pin rotary encoder wit
 | Servo 3 output | 27 | |
 | Servo 4 output | 33 | |
 | Servo 5 output / SBUS + IBUS receiver input | 32 | Shared pin: PWM output normally, switches to UART RX when reading SBUS/IBUS |
-| Encoder push button | 15 | `INPUT_PULLUP`, button to GND |
+| Encoder push button (PSH) | 5 | `INPUT_PULLUP`, button to GND. Strapping pin: don't hold the button while powering up |
 | Encoder TRA | 16 | Clockwise = up with the 1.3" OLED+EC11 module. Runs backwards with another encoder? Swap TRA/TRB or use Settings → Encoder inverted |
 | Encoder TRB | 17 | |
 | OLED SDA (I2C) | 21 | |
