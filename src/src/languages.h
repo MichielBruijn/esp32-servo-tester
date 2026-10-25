@@ -56,10 +56,10 @@ String connectingAccessPointString[] {"AP (Accesspoint) connecting…", "AP (Zug
 // Instructions
 String operationString[] {"******** Operation: ********", "******** Bedienung: ********", "****** Mode d'emploi : ******"};
 String shortPressString[] {"Short Press = Select", "Kurz Drücken = Auswahl", "Appui brièvem. = Sélection"};
-String longPressString[] {"Long Press = Back", "Lang Drücken = Zurück", "Appui long   = Retour"};
+String longPressString[] {"Long Press / BAK = Back", "Lang Drücken / BAK = Zurück", "Appui long / BAK = Retour"};
 String doubleclickString[] {"Doubleclick = CH Change", "Doppelklick = CH Wechsel", "Double-clique = CH Changem."};
 String RotateKnobString[] {"Rotate = Scroll / Adjust", "Drehen = Blättern / Einstell.", "Tourner     = Défiler"};
-String bootButtonString[] {"BOOT btn = CH Change", "BOOT Taste = CH Wechsel", "Bouton BOOT = CH Changem."};
+String bootButtonString[] {"BOOT / CON = CH Change", "BOOT / CON = CH Wechsel", "BOOT / CON = CH Changem."};
 
 // EEPROM
 String eepromReadString[] {"EEPROM read.", "EEPROM gelesen.", "EEPROM lire."};

@@ -20,7 +20,7 @@ All credit for the original firmware architecture (MCPWM servo generation, signa
 - Per-channel adjustable rotation angle (e.g. 90° / 180° / 360°) for the on-screen degree readout
 - PWM signal read function (pulse width + frequency)
 - PPM (Multiswitch), SBUS and IBUS read function
-- Operation via a single rotary encoder with push button (short press / long press / double click), plus the onboard BOOT button as a physical "next channel" shortcut
+- Operation via a single rotary encoder with push button (short press / long press / double click), plus the onboard BOOT button as a physical "next channel" shortcut, and optional BAK/CON buttons (back / next channel) as found on the 1.3" OLED+EC11 module
 - LED flash on every encoder click and button press, next to the power LED
 - Powered via USB (small servos) or a LiPo battery, 2S-6S (larger loads)
 - 0.96" (SSD1306) or 1.3" (SH1106) OLED display
@@ -55,6 +55,8 @@ Any ESP32 DevKit board works — connect an I2C OLED, a 5-pin rotary encoder wit
 | OLED SDA (I2C) | 21 | |
 | OLED SCL (I2C) | 22 | |
 | Passive piezo buzzer | 4 | Driven via LEDC PWM tone, not a flat digitalWrite |
+| Back button (BAK / KEY0) | 18 | Optional, `INPUT_PULLUP`, button to GND. Same as a long press = back. Pin 3 on the 1.3" OLED+EC11 module |
+| Confirm button (CON / KEY1) | 19 | Optional, `INPUT_PULLUP`, button to GND. Same as the BOOT button = next channel. Pin 9 on the 1.3" OLED+EC11 module |
 | BOOT button | 0 | Onboard button on most ESP32 DevKit boards, no extra wiring needed. "Next channel" shortcut everywhere, except in the Oscilloscope screen where it switches probe 1/2 instead |
 | Encoder click LED | 2 | LED + ~220-330Ω series resistor to GND, mounted next to the power LED |
 | Battery voltage sense | 36 | Input-only ADC pin; needs an external resistor divider to bring pack voltage (up to 6S/~25.2V) under 3.3V — the divider ratio is calibrated in software via the "Power Scale" setting, no fixed resistor values required |

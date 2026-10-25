@@ -35,7 +35,7 @@
  GPIO 0: Onboard BOOT button, repurposed as a "next channel" shortcut
  */
 
-char codeVersion[] = "1.40"; // Software revision.
+char codeVersion[] = "1.41"; // Software revision.
 
 //
 // =======================================================================================================
@@ -245,6 +245,8 @@ ESP32Encoder encoder;
 
 #define BUTTON_PIN 15         // Hardware Pin Button
 #define BOOT_BUTTON_PIN 0     // Onboard BOOT button, repurposed at runtime as a channel++ shortcut
+#define BACK_BUTTON_PIN 18    // 1.3" OLED module KEY0 (BAK): same as a long press = back
+#define CON_BUTTON_PIN 19     // 1.3" OLED module KEY1 (CON): same as the BOOT button = next channel
 
 #define ENCODER_PIN_1 16      // Hardware Pin1 Encoder
 #define ENCODER_PIN_2 17      // Hardware Pin2 Encoder
@@ -1210,6 +1212,8 @@ void setup()
   encoder.setFilter(1023);
   pinMode(BUTTON_PIN, INPUT_PULLUP); // BUTTON_PIN = Eingang
   pinMode(BOOT_BUTTON_PIN, INPUT_PULLUP); // BOOT button, only read after boot completes - GPIO0's strapping role is over by then
+  pinMode(BACK_BUTTON_PIN, INPUT_PULLUP);
+  pinMode(CON_BUTTON_PIN, INPUT_PULLUP);
 
   // Speaker setup (passive buzzer, needs a PWM tone rather than a flat digitalWrite)
   ledcSetup(BUZZER_LEDC_CHANNEL, BUZZER_TONE_HZ, 8);
@@ -1364,6 +1368,19 @@ void ButtonRead()
     {
       longPressFired = false; // Button released, ready to detect a fresh press next time
     }
+
+    // BAK button: acts as a long press (back) on each fresh press
+    static bool lastBackButtonState = HIGH;
+    static unsigned long backButtonMillis;
+    bool backButtonState = digitalRead(BACK_BUTTON_PIN);
+    if (backButtonState == LOW && lastBackButtonState == HIGH && buttonState == 0 && millis() - backButtonMillis > bouncing)
+    {
+      backButtonMillis = millis();
+      buttonState = 1;
+      beepDuration = 20;
+      encoderLedDuration = ENCODER_LED_FLASH_MS;
+    }
+    lastBackButtonState = backButtonState;
   }
 
   // Encoder -------------------------------------------------------------------------------------------------
@@ -1411,12 +1428,12 @@ void ButtonRead()
     encoderLedDuration = ENCODER_LED_FLASH_MS; // Flash the click LED for this detent
   }
 
-  // BOOT button ---------------------------------------------------------------------------------
+  // BOOT / CON button ---------------------------------------------------------------------------
   // Extra physical shortcut for "next channel", so you don't need the encoder's double-click for it.
   // In the Oscilloscope screen it switches the probe channel instead, since servo channels don't apply there.
   static bool lastBootButtonState = HIGH;
   static unsigned long bootButtonMillis;
-  bool bootButtonState = digitalRead(BOOT_BUTTON_PIN);
+  bool bootButtonState = digitalRead(BOOT_BUTTON_PIN) && digitalRead(CON_BUTTON_PIN); // LOW if either is pressed
   if (bootButtonState == LOW && lastBootButtonState == HIGH && millis() - bootButtonMillis > bouncing)
   {
     bootButtonMillis = millis();
@@ -3275,4 +3292,4 @@ void Task1code(void *pvParameters) // TODO, testing only!
   {
     // vTaskDelay(1);          // REQUIRED TO RESET THE WATCH DOG TIMER IF WORKFLOW DOES NOT CONTAIN ANY OTHER DELAY
   }
-}*/
+}*/
