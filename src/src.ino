@@ -35,7 +35,7 @@
  GPIO 0: Onboard BOOT button, repurposed as a "next channel" shortcut
  */
 
-char codeVersion[] = "1.42"; // Software revision.
+char codeVersion[] = "1.43"; // Software revision.
 
 //
 // =======================================================================================================
@@ -246,7 +246,7 @@ ESP32Encoder encoder;
 #define BUTTON_PIN 15         // Hardware Pin Button
 #define BOOT_BUTTON_PIN 0     // Onboard BOOT button, repurposed at runtime as a channel++ shortcut
 #define BACK_BUTTON_PIN 18    // 1.3" OLED module KEY0 (BAK): same as a long press = back
-#define CON_BUTTON_PIN 19     // 1.3" OLED module KEY1 (CON): same as the BOOT button = next channel
+#define CON_BUTTON_PIN 19     // 1.3" OLED module KEY1 (CON): same as a short press = select
 
 #define ENCODER_PIN_1 16      // Hardware Pin1 Encoder
 #define ENCODER_PIN_2 17      // Hardware Pin2 Encoder
@@ -1381,6 +1381,19 @@ void ButtonRead()
       encoderLedDuration = ENCODER_LED_FLASH_MS;
     }
     lastBackButtonState = backButtonState;
+
+    // CON button: acts as a short press (select) on each fresh press
+    static bool lastConButtonState = HIGH;
+    static unsigned long conButtonMillis;
+    bool conButtonState = digitalRead(CON_BUTTON_PIN);
+    if (conButtonState == LOW && lastConButtonState == HIGH && buttonState == 0 && millis() - conButtonMillis > bouncing)
+    {
+      conButtonMillis = millis();
+      buttonState = 2;
+      beepDuration = 10;
+      encoderLedDuration = ENCODER_LED_FLASH_MS;
+    }
+    lastConButtonState = conButtonState;
   }
 
   // Encoder -------------------------------------------------------------------------------------------------
@@ -1428,12 +1441,12 @@ void ButtonRead()
     encoderLedDuration = ENCODER_LED_FLASH_MS; // Flash the click LED for this detent
   }
 
-  // BOOT / CON button ---------------------------------------------------------------------------
+  // BOOT button ---------------------------------------------------------------------------------
   // Extra physical shortcut for "next channel", so you don't need the encoder's double-click for it.
   // In the Oscilloscope screen it switches the probe channel instead, since servo channels don't apply there.
   static bool lastBootButtonState = HIGH;
   static unsigned long bootButtonMillis;
-  bool bootButtonState = digitalRead(BOOT_BUTTON_PIN) && digitalRead(CON_BUTTON_PIN); // LOW if either is pressed
+  bool bootButtonState = digitalRead(BOOT_BUTTON_PIN);
   if (bootButtonState == LOW && lastBootButtonState == HIGH && millis() - bootButtonMillis > bouncing)
   {
     bootButtonMillis = millis();
