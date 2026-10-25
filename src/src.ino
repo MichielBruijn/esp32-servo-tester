@@ -35,7 +35,7 @@
  GPIO 0: Onboard BOOT button, repurposed as a "next channel" shortcut
  */
 
-char codeVersion[] = "1.43"; // Software revision.
+char codeVersion[] = "1.44"; // Software revision.
 
 //
 // =======================================================================================================
@@ -248,8 +248,8 @@ ESP32Encoder encoder;
 #define BACK_BUTTON_PIN 18    // 1.3" OLED module KEY0 (BAK): same as a long press = back
 #define CON_BUTTON_PIN 19     // 1.3" OLED module KEY1 (CON): same as a short press = select
 
-#define ENCODER_PIN_1 16      // Hardware Pin1 Encoder
-#define ENCODER_PIN_2 17      // Hardware Pin2 Encoder
+#define ENCODER_PIN_1 17      // Hardware Pin1 Encoder (TRB on the 1.3" OLED+EC11 module)
+#define ENCODER_PIN_2 16      // Hardware Pin2 Encoder (TRA)
 long prev1 = 0;               // Zeitspeicher für Taster
 long prev2 = 0;               // Zeitspeicher für Taster
 int buttonState = 0;          // 0 = Taster nicht betätigt; 1 = Taster langer Druck; 2 = Taster kurzer Druck; 3 = Taster Doppelklick
