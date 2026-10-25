@@ -35,7 +35,7 @@
  GPIO 0: Onboard BOOT button, repurposed as a "next channel" shortcut
  */
 
-char codeVersion[] = "1.44"; // Software revision.
+char codeVersion[] = "1.45"; // Software revision.
 
 //
 // =======================================================================================================
@@ -243,7 +243,7 @@ unsigned long lastJoystickMsgMillis; // millis() of the last PosJ websocket mess
 // Encoder + button
 ESP32Encoder encoder;
 
-#define BUTTON_PIN 15         // Hardware Pin Button
+#define BUTTON_PIN 5          // Hardware Pin Button (PSH on the 1.3" OLED+EC11 module). Strapping pin: do not hold during boot
 #define BOOT_BUTTON_PIN 0     // Onboard BOOT button, repurposed at runtime as a channel++ shortcut
 #define BACK_BUTTON_PIN 18    // 1.3" OLED module KEY0 (BAK): same as a long press = back
 #define CON_BUTTON_PIN 19     // 1.3" OLED module KEY1 (CON): same as a short press = select
